@@ -24,6 +24,9 @@
 		"files.insertFinalNewline": true,
 		"files.trimFinalNewlines": true,
 		"cmake.configureOnOpen": true,
+		"files.associations": {
+			"lvgl.h": "c"
+		},
 	},
 	// tasks.json section
 	"tasks": {

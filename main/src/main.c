@@ -1,4 +1,3 @@
-
 /**
  * @file main
  *
@@ -12,8 +11,8 @@
 #include <unistd.h>
 #include <pthread.h>
 #include "lvgl/lvgl.h"
-#include "lvgl/examples/lv_examples.h"
-#include "lvgl/demos/lv_demos.h"
+#include "theme.h"
+#include "widgets.h"
 
 /*********************
  *      DEFINES
@@ -31,8 +30,9 @@ static lv_display_t * hal_init(int32_t w, int32_t h);
 /**********************
  *  STATIC VARIABLES
  **********************/
+lv_obj_t * system_clock;
 
-/********************** 
+/**********************
  *      MACROS
  **********************/
 
@@ -69,9 +69,11 @@ int main(int argc, char **argv)
   lv_init();
 
   /*Initialize the HAL (display, input devices, tick) for LVGL*/
-  hal_init(480, 272);
+  hal_init(800, 480);
 
-  lv_demo_widgets();
+  init_theme();
+
+  system_clock = lv_nav_bar_create(lv_screen_active(), "Home");
 
   while(1) {
     /* Periodically call the lv_task handler.
