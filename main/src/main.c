@@ -11,7 +11,9 @@
 #include <unistd.h>
 #include <pthread.h>
 #include "lvgl/lvgl.h"
+
 #include "theme.h"
+#include "screen.h"
 #include "widgets.h"
 
 /*********************
@@ -73,7 +75,7 @@ int main(int argc, char **argv)
 
   init_theme();
 
-  system_clock = lv_nav_bar_create(lv_screen_active(), "Home");
+  screen_home_display();
 
   while(1) {
     /* Periodically call the lv_task handler.

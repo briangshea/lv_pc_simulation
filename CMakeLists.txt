@@ -29,7 +29,9 @@ add_executable(main
         main/src/theme.c
         main/src/mouse_cursor_icon.c
         main/src/widgets/lv_clock/lv_clock.c
-        main/src/widgets/lv_nav_bar/lv_nav_bar.c)
+        main/src/widgets/lv_nav_bar/lv_nav_bar.c
+        main/src/screens/home/screen_home.c
+        main/src/screens/viewSelect/screen_view_select.c)
 
 target_include_directories(main PUBLIC main/src/include)
 

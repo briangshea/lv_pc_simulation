@@ -16,7 +16,7 @@
 /*********************
  *      DEFINES
  *********************/
-//#define DEBUG_LAYOUT
+#define DEBUG_LAYOUT
 
 /**********************
  *      TYPEDEFS
@@ -74,10 +74,10 @@ static void new_theme_apply_cb(lv_theme_t * th, lv_obj_t * obj)
 {
     LV_UNUSED(th);
 
-    //if(lv_obj_check_type(obj, &lv_clock_class)) {
+    if(lv_obj_check_type(obj, &lv_nav_bar_class)) {
         lv_obj_add_style(obj, &style_global, 0);
-    //    return;
-    //}
+        return;
+    }
     return;
 }
 

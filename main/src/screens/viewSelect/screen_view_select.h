@@ -7,8 +7,7 @@
     extern "C" {
 #endif
 
-void screen_home_display(lv_obj_t * screen);
-void screen_home_free(void);
+void screen_vs_display(void);
 
 #ifdef __cplusplus
     }
