@@ -34,18 +34,39 @@ const lv_style_const_prop_t style_global_def[] = {
     LV_STYLE_CONST_PAD_BOTTOM(0),
     LV_STYLE_CONST_PAD_LEFT(0),
     LV_STYLE_CONST_PAD_RIGHT(0),
-
 #ifdef DEBUG_LAYOUT
     LV_STYLE_CONST_BORDER_COLOR(LV_COLOR_MAKE(0x55, 0x55, 0x55)),
     LV_STYLE_CONST_BORDER_WIDTH(1),
 #endif
+    LV_STYLE_CONST_PROPS_END
+};
+LV_STYLE_CONST_INIT(style_global, style_global_def);
+
+const lv_style_const_prop_t style_panel_def[] = {
+    LV_STYLE_CONST_BG_COLOR(LV_COLOR_MAKE(0x33, 0x33, 0x33)),
+    LV_STYLE_CONST_RADIUS(5),
+    LV_STYLE_CONST_BG_OPA(0x80),
+
+    LV_STYLE_CONST_PAD_TOP(3),
+    LV_STYLE_CONST_PAD_BOTTOM(3),
+    LV_STYLE_CONST_PAD_LEFT(3),
+    LV_STYLE_CONST_PAD_RIGHT(3),
 
     LV_STYLE_CONST_PROPS_END
 };
+LV_STYLE_CONST_INIT(style_panel, style_panel_def);
 
-LV_STYLE_CONST_INIT(style_global, style_global_def);
+const lv_style_const_prop_t style_roller_temp_sel_def[] = {
+    LV_STYLE_CONST_TEXT_FONT(&lv_font_montserrat_48),
+    LV_STYLE_CONST_PROPS_END
+};
+LV_STYLE_CONST_INIT(style_roller_temp_sel, style_roller_temp_sel_def);
 
-//lv_style_t style_global;
+const lv_style_const_prop_t style_roller_temp_main_def[] = {
+    LV_STYLE_CONST_TEXT_FONT(&lv_font_montserrat_24),
+    LV_STYLE_CONST_PROPS_END
+};
+LV_STYLE_CONST_INIT(style_roller_temp_main, style_roller_temp_main_def);
 
 /**********************
  *      MACROS
@@ -74,10 +95,16 @@ static void new_theme_apply_cb(lv_theme_t * th, lv_obj_t * obj)
 {
     LV_UNUSED(th);
 
+    // Add Global Style
+    lv_obj_add_style(obj, &style_global, 0);
+
     if(lv_obj_check_type(obj, &lv_nav_bar_class)) {
-        lv_obj_add_style(obj, &style_global, 0);
-        return;
+        // Style the Navigation PBar
+    } else if(lv_obj_check_type(obj, &lv_panel_class)) {
+        // Style Panels
+        lv_obj_add_style(obj, &style_panel, 0);
     }
+
     return;
 }
 
