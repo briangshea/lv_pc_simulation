@@ -12,6 +12,8 @@
  *      DEFINES
  *********************/
 #define MY_CLASS &lv_panel_class
+#define MY_TYPE  lv_panel_t
+#define TO_MY_TYPE(obj) (MY_TYPE *)obj
 
 /**********************
  *      TYPEDEFS

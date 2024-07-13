@@ -29,7 +29,8 @@
 			"types.h": "c",
 			"stdio.h": "c",
 			"dirent.h": "c",
-			"unistd.h": "c"
+			"unistd.h": "c",
+			"widgets.h": "c"
 		},
 	},
 	// tasks.json section

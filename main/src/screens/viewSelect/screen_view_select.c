@@ -82,7 +82,7 @@ void screen_vs_display(void) {
         NULL
     );
 
-    nav_bar = lv_nav_bar_create(screen, TITLE_SCREEN_VIEW_SELECT);
-
+    nav_bar = lv_navbar_create(screen);
+    lv_navbar_set_title(nav_bar, TITLE_SCREEN_VIEW_SELECT);
     lv_scr_load_anim(screen, LV_SCR_LOAD_ANIM_FADE_IN, 100, 0, true);
 }

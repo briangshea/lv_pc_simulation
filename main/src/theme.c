@@ -16,7 +16,7 @@
 /*********************
  *      DEFINES
  *********************/
-#define DEBUG_LAYOUT
+//#define DEBUG_LAYOUT
 
 /**********************
  *      TYPEDEFS
@@ -68,6 +68,16 @@ const lv_style_const_prop_t style_roller_temp_main_def[] = {
 };
 LV_STYLE_CONST_INIT(style_roller_temp_main, style_roller_temp_main_def);
 
+const lv_style_const_prop_t style_navbar_def[] = {
+    LV_STYLE_CONST_BG_COLOR(LV_COLOR_MAKE(0x44, 0x44, 0xaa)),
+    LV_STYLE_CONST_RADIUS(5),
+    LV_STYLE_CONST_BG_OPA(0x80),
+
+    LV_STYLE_CONST_PROPS_END
+};
+LV_STYLE_CONST_INIT(style_navbar, style_navbar_def);
+
+
 /**********************
  *      MACROS
  **********************/
@@ -98,8 +108,9 @@ static void new_theme_apply_cb(lv_theme_t * th, lv_obj_t * obj)
     // Add Global Style
     lv_obj_add_style(obj, &style_global, 0);
 
-    if(lv_obj_check_type(obj, &lv_nav_bar_class)) {
-        // Style the Navigation PBar
+    if(lv_obj_check_type(obj, &lv_navbar_class)) {
+        // Style the Navigation Bar
+        lv_obj_add_style(obj, &style_navbar, 0);
     } else if(lv_obj_check_type(obj, &lv_panel_class)) {
         // Style Panels
         lv_obj_add_style(obj, &style_panel, 0);

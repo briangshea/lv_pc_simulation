@@ -86,7 +86,8 @@ void screen_home_display(void) {
 
     lv_obj_set_flex_flow(screen, LV_FLEX_FLOW_COLUMN);
 
-    nav_bar = lv_nav_bar_create(screen, TITLE_SCREEN_HOME);
+    nav_bar = lv_navbar_create(screen);
+    lv_navbar_set_title(nav_bar, TITLE_SCREEN_HOME);
     lv_obj_add_flag(nav_bar, LV_OBJ_FLAG_EVENT_BUBBLE);
 
     hvac_ctrl_pnl = lv_panel_create(screen);

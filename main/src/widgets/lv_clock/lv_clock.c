@@ -94,6 +94,8 @@ lv_obj_t * lv_clock_create(lv_obj_t *parent) {
 
 void lv_clock_set_interval(lv_obj_t * obj, uint32_t interval_ms) {
     LV_ASSERT_NULL(obj);
+    if(!lv_obj_check_type(obj, &lv_clock_class))
+        return;
 
     lv_clock_t *_obj = (lv_clock_t*)obj;
 
