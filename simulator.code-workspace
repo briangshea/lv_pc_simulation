@@ -25,7 +25,11 @@
 		"files.trimFinalNewlines": true,
 		"cmake.configureOnOpen": true,
 		"files.associations": {
-			"lvgl.h": "c"
+			"lvgl.h": "c",
+			"types.h": "c",
+			"stdio.h": "c",
+			"dirent.h": "c",
+			"unistd.h": "c"
 		},
 	},
 	// tasks.json section

@@ -638,8 +638,8 @@
 /*API for open, read, etc*/
 #define LV_USE_FS_POSIX 1
 #if LV_USE_FS_POSIX
-    #define LV_FS_POSIX_LETTER 'S'      /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
-    #define LV_FS_POSIX_PATH   "~/projects/lv_pc_simulation/disk/"         /*Set the working directory. File/directory paths will be appended to it.*/
+    #define LV_FS_POSIX_LETTER 'S'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
+    #define LV_FS_POSIX_PATH   "/home/brian/projects/lv_port_pc_vscode/disk/"         /*Set the working directory. File/directory paths will be appended to it.*/
     #define LV_FS_POSIX_CACHE_SIZE 0    /*>0 to cache this number of bytes in lv_fs_read()*/
 #endif
 
@@ -667,7 +667,7 @@
 /*API for LittleFs. */
 #define LV_USE_FS_LITTLEFS 0
 #if LV_USE_FS_LITTLEFS
-    #define LV_FS_LITTLEFS_LETTER '\0'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
+    #define LV_FS_LITTLEFS_LETTER 'S'   /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
 #endif
 
 /*LODEPNG decoder library*/
