@@ -29,6 +29,20 @@
 /**********************
  *  STATIC VARIABLES
  **********************/
+const lv_style_const_prop_t style_screen_def[] = {
+    LV_STYLE_CONST_PAD_TOP(0),
+    LV_STYLE_CONST_PAD_BOTTOM(0),
+    LV_STYLE_CONST_PAD_LEFT(0),
+    LV_STYLE_CONST_PAD_RIGHT(0),
+#ifdef DEBUG_LAYOUT
+    LV_STYLE_CONST_BORDER_COLOR(LV_COLOR_MAKE(0x55, 0x55, 0x55)),
+    LV_STYLE_CONST_BORDER_WIDTH(1),
+#endif
+    LV_STYLE_CONST_PROPS_END
+};
+LV_STYLE_CONST_INIT(style_screen, style_screen_def);
+
+
 const lv_style_const_prop_t style_global_def[] = {
     LV_STYLE_CONST_PAD_TOP(0),
     LV_STYLE_CONST_PAD_BOTTOM(0),
@@ -47,11 +61,6 @@ const lv_style_const_prop_t style_panel_def[] = {
     LV_STYLE_CONST_RADIUS(5),
     LV_STYLE_CONST_BG_OPA(0x80),
 
-    LV_STYLE_CONST_PAD_TOP(3),
-    LV_STYLE_CONST_PAD_BOTTOM(3),
-    LV_STYLE_CONST_PAD_LEFT(3),
-    LV_STYLE_CONST_PAD_RIGHT(3),
-
     LV_STYLE_CONST_PROPS_END
 };
 LV_STYLE_CONST_INIT(style_panel, style_panel_def);
@@ -69,10 +78,13 @@ const lv_style_const_prop_t style_roller_temp_main_def[] = {
 LV_STYLE_CONST_INIT(style_roller_temp_main, style_roller_temp_main_def);
 
 const lv_style_const_prop_t style_navbar_def[] = {
-    LV_STYLE_CONST_BG_COLOR(LV_COLOR_MAKE(0x44, 0x44, 0xaa)),
+    LV_STYLE_CONST_BG_COLOR(LV_COLOR_MAKE(0x66, 0x66, 0xaa)),
     LV_STYLE_CONST_RADIUS(5),
     LV_STYLE_CONST_BG_OPA(0x80),
-
+    LV_STYLE_CONST_PAD_TOP(3),
+    LV_STYLE_CONST_PAD_BOTTOM(3),
+    LV_STYLE_CONST_PAD_LEFT(3),
+    LV_STYLE_CONST_PAD_RIGHT(3),
     LV_STYLE_CONST_PROPS_END
 };
 LV_STYLE_CONST_INIT(style_navbar, style_navbar_def);
@@ -104,20 +116,25 @@ LV_STYLE_CONST_INIT(style_navbar, style_navbar_def);
 static void new_theme_apply_cb(lv_theme_t * th, lv_obj_t * obj)
 {
     LV_UNUSED(th);
+    LV_ASSERT_NULL(obj);
 
-    // Add Global Style
-    lv_obj_add_style(obj, &style_global, 0);
+    if(lv_obj_check_type(obj, &lv_obj_class) && lv_obj_get_parent(obj) == NULL) {
+        // This is a screen type object, apply default screen theme
+        lv_obj_add_style(obj, &style_screen, 0);
+    } else {
+        // Add Global Style
+        lv_obj_add_style(obj, &style_global, 0);
 
-    if(lv_obj_check_type(obj, &lv_navbar_class)) {
-        // Style the Navigation Bar
-        lv_obj_add_style(obj, &style_navbar, 0);
-    } else if(lv_obj_check_type(obj, &lv_panel_class)) {
-        // Style Panels
-        lv_obj_add_style(obj, &style_panel, 0);
-    } else if(lv_obj_check_type(obj, &lv_clock_class)) {
+        if(lv_obj_check_type(obj, &lv_navbar_class)) {
+            // Style the Navigation Bar
+            lv_obj_add_style(obj, &style_navbar, 0);
+        } else if(lv_obj_check_type(obj, &lv_panel_class)) {
+            // Style Panels
+            lv_obj_add_style(obj, &style_panel, 0);
+        } else if(lv_obj_check_type(obj, &lv_clock_class)) {
 
+        }
     }
-
     return;
 }
 

@@ -6,7 +6,6 @@
 /*********************
  *      INCLUDES
  *********************/
-#include "screen_view_select.h"
 #include "screen.h"
 #include "widgets.h"
 #include "stdio.h"

@@ -30,7 +30,19 @@
 			"stdio.h": "c",
 			"dirent.h": "c",
 			"unistd.h": "c",
-			"widgets.h": "c"
+			"widgets.h": "c",
+			"screen_home.h": "c",
+			"screen.h": "c",
+			"screen_view_select.h": "c",
+			"cstdlib": "c",
+			"memory_resource": "c",
+			"memory": "c",
+			"*.txx": "c",
+			"string.h": "c",
+			"random": "c",
+			"unordered_map": "c",
+			"unordered_set": "c",
+			"btree.h": "c"
 		},
 	},
 	// tasks.json section
