@@ -3,7 +3,7 @@ project(lvgl)
 
 option(LV_USE_DRAW_SDL "Use SDL draw unit" OFF)
 option(LV_USE_LIBPNG "Use libpng to decode PNG" OFF)
-option(LV_USE_LIBJPEG_TURBO "Use libjpeg turbo to decode JPEG" OFF)
+option(LV_USE_LIBJPEG_TURBO "Use libjpeg turbo to decode JPEG" ON)
 option(LV_USE_FFMPEG "Use libffmpeg to display video using lv_ffmpeg" OFF)
 option(LV_USE_FREETYPE "Use freetype lib" OFF)
 
@@ -53,13 +53,13 @@ if(LV_USE_DRAW_SDL)
     # `brew install sdl2_image`
     find_package(SDL2_image REQUIRED)
     target_include_directories(lvgl PUBLIC ${SDL2_IMAGE_INCLUDE_DIRS})
-    target_link_libraries(main ${SDL2_IMAGE_LIBRARIES})
+    target_link_libraries(main PUBLIC ${SDL2_IMAGE_LIBRARIES})
 endif(LV_USE_DRAW_SDL)
 
 if(LV_USE_LIBPNG)
     find_package(PNG REQUIRED)
     target_include_directories(lvgl PUBLIC ${PNG_INCLUDE_DIR})
-    target_link_libraries(main ${PNG_LIBRARY})
+    target_link_libraries(main PUBLIC ${PNG_LIBRARY})
 endif(LV_USE_LIBPNG)
 
 if(LV_USE_LIBJPEG_TURBO)
@@ -68,7 +68,7 @@ if(LV_USE_LIBJPEG_TURBO)
     # `brew install libjpeg-turbo`
     find_package(JPEG REQUIRED)
     target_include_directories(lvgl PUBLIC ${JPEG_INCLUDE_DIRS})
-    target_link_libraries(main ${JPEG_LIBRARIES})
+    target_link_libraries(main PUBLIC ${JPEG_LIBRARIES})
 endif(LV_USE_LIBJPEG_TURBO)
 
 if(LV_USE_FFMPEG)

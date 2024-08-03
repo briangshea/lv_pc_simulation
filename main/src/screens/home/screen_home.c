@@ -103,6 +103,22 @@ void hvac_ctrl_temp_roller_cb(lv_event_t *e) {
     return;
 }
 
+void sprinkler_prog_cb(sprinkler_zone_event_t *e) {
+    lv_obj_t *obj = (lv_obj_t *)sprinkler_prog_event_get_user_data(e);
+    if(!obj) return;
+
+    switch(sprinkler_prog_event_get_type(e)) {
+        case SPRINKLER_EVENT_CHANGED:
+            sprinkler_summary_refresh(obj);
+            break;
+        case SPRINKLER_EVENT_STARTED:
+        case SPRINKLER_EVENT_ENDED:
+        case SPRINKLER_EVENT_CREATED:
+        case SPRINKLER_EVENT_DELETED:
+        break;
+    }
+}
+
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
@@ -147,19 +163,21 @@ void screen_home_display(void) {
     lv_obj_add_event_cb(hvac_ctrl_temp_roller, hvac_ctrl_temp_roller_cb, LV_EVENT_ALL, NULL);
 
     spkrl_sum_pnl = lv_panel_create(screen);
+    lv_obj_set_style_pad_all(spkrl_sum_pnl, 5, 0);
+
     lv_obj_set_size(spkrl_sum_pnl, LV_SIZE_CONTENT, 400);
     lv_obj_set_flex_flow(spkrl_sum_pnl, LV_FLEX_FLOW_COLUMN);
 
-    time_t now = time(0);
-    struct tm *tm_time = localtime(&now);
+    time_t now = time(NULL);
 
     for(int i=0; i<MAX_PROGS; i++) {
-        progs[i] = sprinkler_prog_init(NULL, NULL);
-        sprinkler_prog_set_start(progs[i], tm_time);
+        progs[i] = sprinkler_prog_init();
+        sprinkler_prog_set_start(progs[i], now);
         sprkl_summary[i] = sprinkler_summery_create(spkrl_sum_pnl, progs[i]);
-        if(i==0)
-            lv_obj_add_flag(sprkl_summary[i], LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+        sprinkler_prog_set_cb(progs[i], sprinkler_prog_cb, sprkl_summary[i]);
     }
+
+    sprinkler_prog_set_description(progs[0], "A really long program description to test scrolling.");
 
     lv_scr_load_anim(screen, LV_SCR_LOAD_ANIM_FADE_IN, 100, 0, true);
 }

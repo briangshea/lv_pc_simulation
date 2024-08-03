@@ -48,6 +48,7 @@ const lv_style_const_prop_t style_global_def[] = {
     LV_STYLE_CONST_PAD_BOTTOM(0),
     LV_STYLE_CONST_PAD_LEFT(0),
     LV_STYLE_CONST_PAD_RIGHT(0),
+    LV_STYLE_CONST_OUTLINE_WIDTH(0),
 #ifdef DEBUG_LAYOUT
     LV_STYLE_CONST_BORDER_COLOR(LV_COLOR_MAKE(0x55, 0x55, 0x55)),
     LV_STYLE_CONST_BORDER_WIDTH(1),
@@ -88,6 +89,25 @@ const lv_style_const_prop_t style_navbar_def[] = {
     LV_STYLE_CONST_PROPS_END
 };
 LV_STYLE_CONST_INIT(style_navbar, style_navbar_def);
+
+const lv_style_const_prop_t style_image_def[] = {
+    LV_STYLE_CONST_RADIUS(5),
+    LV_STYLE_CONST_CLIP_CORNER(true),
+    LV_STYLE_CONST_PROPS_END
+};
+LV_STYLE_CONST_INIT(style_image, style_image_def);
+
+const lv_style_const_prop_t style_sprinkler_summary_enabled_def[] = {
+    LV_STYLE_CONST_BG_COLOR(LV_COLOR_MAKE(0x11, 0x66, 0x11)),
+    LV_STYLE_CONST_PROPS_END
+};
+LV_STYLE_CONST_INIT(style_sprinkler_summary_enabled, style_sprinkler_summary_enabled_def);
+
+const lv_style_const_prop_t style_sprinkler_summary_disabled_def[] = {
+    LV_STYLE_CONST_BG_COLOR(LV_COLOR_MAKE(0x66, 0x11, 0x11)),
+    LV_STYLE_CONST_PROPS_END
+};
+LV_STYLE_CONST_INIT(style_sprinkler_summary_disabled, style_sprinkler_summary_disabled_def);
 
 
 /**********************
@@ -133,6 +153,9 @@ static void new_theme_apply_cb(lv_theme_t * th, lv_obj_t * obj)
             lv_obj_add_style(obj, &style_panel, 0);
         } else if(lv_obj_check_type(obj, &lv_clock_class)) {
 
+        } else if(lv_obj_check_type(obj, &lv_image_class)) {
+            // Round corners on images by default
+            lv_obj_add_style(obj, &style_image, 0);
         }
     }
     return;
