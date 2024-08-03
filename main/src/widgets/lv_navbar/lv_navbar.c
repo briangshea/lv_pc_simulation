@@ -77,20 +77,20 @@ lv_obj_t * lv_navbar_create(lv_obj_t *parent) {
     lv_obj_class_init_obj(obj);
     TO_MY_OBJ(obj);
 
-    return my_obj;
+    return (lv_obj_t*)my_obj;
 }
 
 static void lv_navbar_constructor_cb(const lv_obj_class_t * class_p, lv_obj_t * obj) {
     LV_ASSERT_OBJ(obj, MY_CLASS);
     TO_MY_OBJ(obj);
 
-    my_obj->tl = lv_clock_create(my_obj);
+    my_obj->tl = lv_clock_create((lv_obj_t*)my_obj);
     LV_ASSERT_MALLOC(my_obj->tl);
     lv_clock_set_interval(my_obj->tl, 100);
     lv_obj_align(my_obj->tl, LV_ALIGN_LEFT_MID, 0, 0);
     lv_obj_set_width(my_obj->tl, LV_PCT(33));
 
-    my_obj->title = lv_label_create(my_obj);
+    my_obj->title = lv_label_create((lv_obj_t*)my_obj);
     LV_ASSERT_MALLOC(my_obj->title);
     lv_obj_align(my_obj->title, LV_ALIGN_TOP_MID, 0, 0);
     lv_obj_set_width(my_obj->title, LV_PCT(33));

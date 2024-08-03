@@ -22,22 +22,43 @@ add_compile_definitions($<$<BOOL:${LV_USE_LIBJPEG_TURBO}>:LV_USE_LIBJPEG_TURBO=1
 add_compile_definitions($<$<BOOL:${LV_USE_FFMPEG}>:LV_USE_FFMPEG=1>)
 
 add_subdirectory(lvgl)
-target_include_directories(lvgl PUBLIC ${PROJECT_SOURCE_DIR} ${SDL2_INCLUDE_DIRS})
+
+target_include_directories(lvgl
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}
+        ${SDL2_INCLUDE_DIRS}
+)
+
+add_subdirectory(libraries)
+add_subdirectory(main/src)
 
 add_executable(main
-        main/src/main.c
-        main/src/theme.c
-        main/src/mouse_cursor_icon.c
-        main/src/widgets/lv_clock/lv_clock.c
-        main/src/widgets/lv_navbar/lv_navbar.c
-        main/src/screens/home/screen_home.c
-        main/src/screens/viewSelect/screen_view_select.c
-        main/src/widgets/lv_panel/lv_panel.c)
+    main/src/main.c
+    main/src/theme.c
+    main/src/mouse_cursor_icon.c
+    #main/src/widgets/lv_clock/lv_clock.c
+    #main/src/widgets/lv_navbar/lv_navbar.c
+    main/src/screens/home/screen_home.c
+    main/src/screens/viewSelect/screen_view_select.c
+    #main/src/widgets/lv_panel/lv_panel.c
+    #main/src/subsystem/sprinkler/sprinkler.c
+    main/src/sprinkler_summary.c
+)
 
-target_include_directories(main PUBLIC main/src/include)
+target_include_directories(main PRIVATE main/src main/src/include)
 
 target_compile_definitions(main PRIVATE LV_CONF_INCLUDE_SIMPLE)
-target_link_libraries(main lvgl lvgl::examples lvgl::demos lvgl::thorvg ${SDL2_LIBRARIES} m pthread)
+target_link_libraries(main
+    PRIVATE
+    lvgl
+    lvgl::thorvg
+    ${SDL2_LIBRARIES}
+    m
+    pthread
+    sprinkler
+    widgets
+)
+
 add_custom_target (run COMMAND ${EXECUTABLE_OUTPUT_PATH}/main DEPENDS main)
 
 if(LV_USE_DRAW_SDL)

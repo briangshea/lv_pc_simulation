@@ -12,9 +12,11 @@
 #include <pthread.h>
 #include "lvgl/lvgl.h"
 
+#include "config.h"
 #include "theme.h"
 #include "screen.h"
 #include "widgets.h"
+#include "sprinkler.h"
 
 /*********************
  *      DEFINES
@@ -28,6 +30,7 @@
  *  STATIC PROTOTYPES
  **********************/
 static lv_display_t * hal_init(int32_t w, int32_t h);
+sprinkler_prog_t *progs[MAX_PROGS] = {NULL};
 
 /**********************
  *  STATIC VARIABLES

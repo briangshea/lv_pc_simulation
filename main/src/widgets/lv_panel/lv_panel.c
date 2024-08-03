@@ -6,7 +6,8 @@
 /*********************
  *      INCLUDES
  *********************/
-#include "widgets.h"
+#include "lvgl.h"
+#include "lv_panel.h"
 
 /*********************
  *      DEFINES
@@ -46,9 +47,9 @@ const lv_obj_class_t lv_panel_class = {
     .height_def = LV_SIZE_CONTENT,
     .instance_size = sizeof(lv_panel_t),
 
-    //.editable = ;
-    //.group_def = ;
-    //.theme_inheritable = ;
+    //.editable = ,
+    //.group_def = ,
+    .theme_inheritable = 1
 };
 
 /**********************
@@ -73,7 +74,6 @@ static void lv_panel_destructor_cb(const lv_obj_class_t * class_p, lv_obj_t * ob
 
 static void lv_panel_event_cb(const lv_obj_class_t * class_p, lv_event_t * e) {
     LV_LOG_INFO("begin");
-
 }
 
 /**********************

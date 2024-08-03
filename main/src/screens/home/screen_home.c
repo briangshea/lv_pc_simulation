@@ -9,8 +9,10 @@
 #include "screen.h"
 #include "widgets.h"
 #include "theme.h"
+#include "sprinkler.h"
 #include "stdio.h"
 #include "time.h"
+#include "sprinkler_summary.h"
 
 /*********************
  *      DEFINES
@@ -32,6 +34,10 @@ static lv_obj_t *nav_bar = NULL;
 
 static lv_obj_t *hvac_ctrl_pnl = NULL;
 static lv_obj_t *hvac_ctrl_temp_roller = NULL;
+
+static lv_obj_t *spkrl_sum_pnl = NULL;
+
+static lv_obj_t *sprkl_summary[MAX_PROGS] = {NULL};
 
 /**********************
  *      MACROS
@@ -73,7 +79,7 @@ void screen_home_event_handler(lv_event_t * e) {
     return;
 }
 
-void hvac_ctrl_temp_roller_cb(lv_event_cb_t *e) {
+void hvac_ctrl_temp_roller_cb(lv_event_t *e) {
     LV_ASSERT_NULL(e);
 
     lv_obj_t *obj = lv_event_get_target_obj(e);
@@ -108,13 +114,14 @@ void screen_home_display(void) {
         NULL
     );
 
-    lv_obj_set_flex_flow(screen, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_flow(screen, LV_FLEX_FLOW_ROW);
 
     nav_bar = lv_navbar_create(screen);
     lv_navbar_set_title(nav_bar, TITLE_SCREEN_HOME);
     lv_obj_add_flag(nav_bar, LV_OBJ_FLAG_EVENT_BUBBLE);
 
     hvac_ctrl_pnl = lv_panel_create(screen);
+    lv_obj_add_flag(hvac_ctrl_pnl, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
     lv_obj_set_size(hvac_ctrl_pnl, LV_PCT(25), 400);
 
     hvac_ctrl_temp_roller = lv_roller_create(hvac_ctrl_pnl);
@@ -136,6 +143,21 @@ void screen_home_display(void) {
 
     lv_roller_set_visible_row_count(hvac_ctrl_temp_roller, 2);
     lv_obj_add_event_cb(hvac_ctrl_temp_roller, hvac_ctrl_temp_roller_cb, LV_EVENT_ALL, NULL);
+
+    spkrl_sum_pnl = lv_panel_create(screen);
+    lv_obj_set_size(spkrl_sum_pnl, LV_SIZE_CONTENT, 400);
+    lv_obj_set_flex_flow(spkrl_sum_pnl, LV_FLEX_FLOW_COLUMN);
+
+    time_t now = time(0);
+    struct tm *tm_time = localtime(&now);
+
+    for(int i=0; i<MAX_PROGS; i++) {
+        progs[i] = sprinkler_prog_init(NULL, NULL);
+        sprinkler_prog_set_start(progs[i], tm_time);
+        sprkl_summary[i] = sprinkler_summery_create(spkrl_sum_pnl, progs[i]);
+        if(i==0)
+            lv_obj_add_flag(sprkl_summary[i], LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+    }
 
     lv_scr_load_anim(screen, LV_SCR_LOAD_ANIM_FADE_IN, 100, 0, true);
 }

@@ -42,7 +42,9 @@
 			"random": "c",
 			"unordered_map": "c",
 			"unordered_set": "c",
-			"btree.h": "c"
+			"btree.h": "c",
+			"sprinkler.h": "c",
+			"lv_clock.h": "c"
 		},
 	},
 	// tasks.json section
