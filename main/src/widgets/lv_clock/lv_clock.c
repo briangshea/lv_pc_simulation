@@ -81,10 +81,10 @@ lv_obj_t * lv_clock_create(lv_obj_t *parent) {
     if (obj == NULL) return NULL;
 
     lv_clock_t * _clock = (lv_clock_t *)obj;
-    lv_obj_set_size(_clock, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_obj_set_flex_flow(_clock, LV_FLEX_FLOW_ROW);
+    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+    lv_obj_set_flex_flow(obj, LV_FLEX_FLOW_ROW);
 
-    _clock->display = lv_label_create(_clock);
+    _clock->display = lv_label_create(obj);
     lv_obj_set_size(_clock->display, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
     lv_obj_set_flex_grow(_clock->display, 1);
     lv_obj_set_align(_clock->display, LV_ALIGN_CENTER);

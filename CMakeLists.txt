@@ -29,23 +29,10 @@ target_include_directories(lvgl
         ${SDL2_INCLUDE_DIRS}
 )
 
-add_subdirectory(libraries)
-add_subdirectory(main/src)
+file(GLOB_RECURSE SOURCES main/src/*.c)
 
-add_executable(main
-    main/src/main.c
-    main/src/theme.c
-    main/src/mouse_cursor_icon.c
-    #main/src/widgets/lv_clock/lv_clock.c
-    #main/src/widgets/lv_navbar/lv_navbar.c
-    main/src/screens/home/screen_home.c
-    main/src/screens/viewSelect/screen_view_select.c
-    #main/src/widgets/lv_panel/lv_panel.c
-    #main/src/subsystem/sprinkler/sprinkler.c
-    main/src/sprinkler_summary.c
-)
-
-target_include_directories(main PRIVATE main/src main/src/include)
+add_executable(main ${SOURCES})
+target_include_directories(main PRIVATE main/src/include )
 
 target_compile_definitions(main PRIVATE LV_CONF_INCLUDE_SIMPLE)
 target_link_libraries(main
@@ -55,8 +42,6 @@ target_link_libraries(main
     ${SDL2_LIBRARIES}
     m
     pthread
-    sprinkler
-    widgets
 )
 
 add_custom_target (run COMMAND ${EXECUTABLE_OUTPUT_PATH}/main DEPENDS main)

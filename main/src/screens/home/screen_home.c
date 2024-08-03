@@ -6,12 +6,14 @@
 /*********************
  *      INCLUDES
  *********************/
+#include <stdio.h>
+#include <time.h>
+
+#include "config.h"
 #include "screen.h"
 #include "widgets.h"
 #include "theme.h"
 #include "sprinkler.h"
-#include "stdio.h"
-#include "time.h"
 #include "sprinkler_summary.h"
 
 /*********************
