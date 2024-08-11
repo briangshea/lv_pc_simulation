@@ -3,6 +3,14 @@
 
 #include <stdlib.h>
 #include <time.h>
+#include "linkedlist.h"
+
+#define SPRINKLER_SCALE_MIN 0           //    0%
+#define SPRINKLER_SCALE_MAX 3000        //  300%
+#define SPRINKLER_SCALE_M   1000        // 1000 = 100.0%
+
+#define SPRINKLER_SCALE_FROM(x)  ((x)/SPRINKLER_SCALE_M)
+#define SPRINKLER_SCALE_TO(x)    ((x)*SPRINKLER_SCALE_M)
 
 typedef struct _sprinkler_prog_s sprinkler_prog_t;
 typedef struct _sprinkler_zone_s sprinkler_zone_t;
@@ -11,12 +19,12 @@ typedef enum {
     SPRINKLER_EVENT_CHANGED = 0,
     SPRINKLER_EVENT_STARTED,
     SPRINKLER_EVENT_ENDED,
-    SPRINKLER_EVENT_CREATED,
     SPRINKLER_EVENT_DELETED
 } sprinkler_event_type_t;
 
 typedef struct _sprinkler_prog_event_s sprinkler_prog_event_t;
 typedef struct _sprinkler_zone_event_s sprinkler_zone_event_t;
+typedef llnode_t* sprinkler_prog_dsc_t;
 
 typedef void (*sprinkler_prog_event_cb)(sprinkler_prog_event_t *e);
 typedef void (*sprinkler_zone_event_cb)(sprinkler_zone_event_t *e);
@@ -24,7 +32,8 @@ typedef void (*sprinkler_zone_event_cb)(sprinkler_zone_event_t *e);
 sprinkler_prog_t * sprinkler_prog_init(void);
 void sprinkler_prog_delete(sprinkler_prog_t *p);
 
-void sprinkler_prog_set_cb(sprinkler_prog_t *p, sprinkler_prog_event_cb program_cb, void *user_data);
+sprinkler_prog_dsc_t sprinkler_prog_add_cb(sprinkler_prog_t *p, sprinkler_prog_event_cb program_cb, void *user_data);
+void sprinkler_prog_remove_cb(sprinkler_prog_t *p, sprinkler_prog_dsc_t dsc);
 
 size_t sprinkler_prog_get_interval(sprinkler_prog_t *p);
 void sprinkler_prog_set_interval(sprinkler_prog_t *p, size_t interval);

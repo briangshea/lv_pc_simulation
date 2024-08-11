@@ -124,7 +124,6 @@ void sprinkler_prog_cb(sprinkler_prog_event_t *e) {
             break;
         case SPRINKLER_EVENT_STARTED:
         case SPRINKLER_EVENT_ENDED:
-        case SPRINKLER_EVENT_CREATED:
         case SPRINKLER_EVENT_DELETED:
         break;
     }
@@ -181,7 +180,7 @@ void screen_home_display(void) {
 
     for(int i=0; i<MAX_PROGS; i++) {
         sprkl_summary[i] = sprinkler_summery_create(spkrl_sum_pnl, progs[i]);
-        sprinkler_prog_set_cb(progs[i], sprinkler_prog_cb, sprkl_summary[i]);
+        sprinkler_prog_add_cb(progs[i], sprinkler_prog_cb, sprkl_summary[i]);
         lv_obj_add_event_cb(sprkl_summary[i], sprinkler_summary_cb, LV_EVENT_ALL, progs[i]);
     }
 

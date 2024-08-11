@@ -2,3 +2,7 @@
 	path = lvgl
 	url = https://github.com/briangshea/lvgl.git
 	branch = v9.1
+[submodule "ll"]
+	path = ll
+	url = https://github.com/briangshea/c_linkedlist.git
+	branch = main

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "sprinkler.h"
+#include "linkedlist.h"
 
 #ifndef SPRINKLER_MAX_NAME_LEN
 # define SPRINKLER_MAX_NAME_LEN 64
@@ -27,15 +28,7 @@
 #define SPKLR_ASSERT_NULL(x) if(NULL==(x)) { SPKLR_ASSERT_LOG(); ASSERT_HANDLER; }
 #define SPKLR_ASSERT_MALLOC(x) if(NULL==(x)) { SPKLR_ASSERT_LOG(); ASSERT_HANDLER; }
 
-#define SEND_PROG_EVENT(evt) {                \
-        if(p->program_cb) {                   \
-            sprinkler_prog_event_t e;         \
-            e.type = (evt);                   \
-            e.prog = p;                       \
-            e.user_data = p->user_data;       \
-            p->program_cb(&e);                \
-        }                                     \
-    }
+#define SEND_PROG_EVENT(evt) _sprinkler_prog_send_event(p, evt)
 
 #define SEND_ZONE_EVENT(evt) {                \
         if(z->zone_cb) {                      \
@@ -69,10 +62,16 @@ struct _sprinkler_prog_s {
     size_t zone_count;              // number of zones controlled by program
     sprinkler_zone_t *zones[SPRINKLER_MAX_ZONES];  // array of zones to be controlled by program, null terminated list
 
-    sprinkler_prog_event_cb program_cb; // callback to handle program events
+    //sprinkler_prog_event_cb program_cb; // callback to handle program events
+    linkedlist_t *program_cb_list;
 
     void *user_data;
 };
+
+typedef struct {
+    sprinkler_prog_event_cb cb;
+    void *user_data;
+} sprinkler_prob_cb_data_t;
 
 /**
  * Sprinkler Zone Model
@@ -104,12 +103,27 @@ struct _sprinkler_zone_event_s {
     void * user_data;
 };
 
+static void _sprinkler_prog_send_event(sprinkler_prog_t *p, sprinkler_event_type_t evt) {
+    if(p->program_cb_list) {
+        sprinkler_prog_event_t e;
+        e.type = (evt);
+        e.prog = p;
+        e.user_data = p->user_data;
+
+        LL_FORWARD(p->program_cb_list, item) {
+            sprinkler_prob_cb_data_t *cb = (sprinkler_prob_cb_data_t*)llnode_data(item);
+            cb->cb(&e);
+        }
+    }
+}
+
+
 sprinkler_prog_t * sprinkler_prog_init(void) {
     sprinkler_prog_t *p = calloc(1, sizeof(sprinkler_prog_t));
     SPKLR_ASSERT_NULL(p);
     //memset(p, 0, sizeof(sprinkler_prog_t));
     prog_count++;
-    p->program_cb = NULL;
+    p->program_cb_list = NULL;
     p->user_data = NULL;
     p->name = malloc(33);
     p->enabled = (prog_count==1);
@@ -118,23 +132,48 @@ sprinkler_prog_t * sprinkler_prog_init(void) {
     snprintf(p->description, 32, "Program %d", prog_count);
     p->scale = 1000;
     p->interval = 1;
-    SEND_PROG_EVENT(SPRINKLER_EVENT_CREATED);
     return p;
 }
 
 void sprinkler_prog_delete(sprinkler_prog_t *p) {
     SPKLR_ASSERT_NULL(p);
     SEND_PROG_EVENT(SPRINKLER_EVENT_DELETED);
+
+    if(p->program_cb_list) ll_destroy(p->program_cb_list, free);
     if(p->name) free(p->name);
     if(p->description) free(p->description);
     free(p);
 }
 
-void sprinkler_prog_set_cb(sprinkler_prog_t *p, sprinkler_prog_event_cb program_cb, void *user_data) {
+sprinkler_prog_dsc_t sprinkler_prog_add_cb(sprinkler_prog_t *p, sprinkler_prog_event_cb program_cb, void *user_data) {
     SPKLR_ASSERT_NULL(p);
-    p->user_data = user_data;
-    p->program_cb = program_cb;
-    SEND_PROG_EVENT(SPRINKLER_EVENT_CHANGED);
+    if(!program_cb) return 0;
+
+    sprinkler_prob_cb_data_t *newcb = (sprinkler_prob_cb_data_t*)calloc(1, sizeof(sprinkler_prob_cb_data_t));
+
+    newcb->cb = program_cb;
+    newcb->user_data = user_data;
+
+    if(!p->program_cb_list)
+        p->program_cb_list = ll_create();
+
+    ll_push(p->program_cb_list, newcb);
+    return (sprinkler_prog_dsc_t)newcb;
+}
+
+void sprinkler_prog_remove_cb(sprinkler_prog_t *p, sprinkler_prog_dsc_t dsc) {
+    SPKLR_ASSERT_NULL(p);
+
+    if(!p->program_cb_list)
+        return;
+
+    LL_FORWARD(p->program_cb_list, node) {
+        sprinkler_prog_dsc_t curDsc = llnode_data(node);
+        if(dsc == curDsc) {
+            llnode_remove(p->program_cb_list, node, free);
+            break;
+        }
+    }
 }
 
 size_t sprinkler_prog_get_interval(sprinkler_prog_t *p) {
@@ -187,8 +226,8 @@ int sprinkler_prog_get_scale(sprinkler_prog_t *p) {
 
 void sprinkler_prog_set_scale(sprinkler_prog_t *p, int scale) {
     SPKLR_ASSERT_NULL(p);
-    if(scale>10000) p->scale = 10000;
-    else if( scale < 0 ) p->scale = 0;
+    if(scale>SPRINKLER_SCALE_MAX) p->scale = SPRINKLER_SCALE_MAX;
+    else if( scale < SPRINKLER_SCALE_MIN ) p->scale = SPRINKLER_SCALE_MIN;
     else p->scale = scale;
     SEND_PROG_EVENT(SPRINKLER_EVENT_CHANGED);
 }
@@ -252,7 +291,7 @@ sprinkler_zone_t * sprinkler_zone_init(sprinkler_zone_event_cb zone_cb, void *us
     z->description = malloc(33);
     snprintf(z->description, 32, "Zone %d", zone_count);
     z->scale = 1000;
-    SEND_ZONE_EVENT(SPRINKLER_EVENT_CREATED);
+    return z;
 }
 
 void sprinkler_zone_delete(sprinkler_zone_t *z) {
@@ -328,13 +367,14 @@ const char * sprinkler_zone_get_description(sprinkler_zone_t *z) {
     return z->description;
 }
 
-void sprinkler_sone_set_description(sprinkler_zone_t *z, char *description) {
+void sprinkler_zone_set_description(sprinkler_zone_t *z, char *description) {
     SPKLR_ASSERT_NULL(z);
     z->description = realloc(z->description, strlen(description)+1);
     SPKLR_ASSERT_MALLOC(z->description);
     memcpy(z->description, description, strlen(description)+1);
     SEND_ZONE_EVENT(SPRINKLER_EVENT_CHANGED);
 }
+
 
 sprinkler_event_type_t sprinkler_prog_event_get_type(sprinkler_prog_event_t *e) {
     SPKLR_ASSERT_NULL(e);
