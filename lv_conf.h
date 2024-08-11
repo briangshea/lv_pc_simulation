@@ -232,7 +232,7 @@
     *LV_LOG_LEVEL_ERROR       Only critical issue, when the system may fail
     *LV_LOG_LEVEL_USER        Only logs added by the user
     *LV_LOG_LEVEL_NONE        Do not log anything*/
-    #define LV_LOG_LEVEL LV_LOG_LEVEL_WARN
+    #define LV_LOG_LEVEL LV_LOG_LEVEL_INFO
 
     /*1: Print the log with 'printf';
     *0: User need to register a callback with `lv_log_register_print_cb()`*/
@@ -606,8 +606,22 @@
     #define LV_THEME_DEFAULT_TRANSITION_TIME 80
 #endif /*LV_USE_THEME_DEFAULT*/
 
+/*A simple, impressive and very complete theme*/
+#define LV_USE_THEME_BRIAN 0
+#if LV_USE_THEME_BRIAN
+
+    /*0: Light mode; 1: Dark mode*/
+    #define LV_THEME_BRIAN_DARK 1
+
+    /*1: Enable grow on press*/
+    #define LV_THEME_BRIAN_GROW 1
+
+    /*Default transition time in [ms]*/
+    #define LV_THEME_BRIAN_TRANSITION_TIME 80
+#endif /*LV_USE_THEME_BRIAN*/
+
 /*A very simple theme that is a good starting point for a custom theme*/
-#define LV_USE_THEME_SIMPLE 1
+#define LV_USE_THEME_SIMPLE 0
 
 /*A theme designed for monochrome displays*/
 #define LV_USE_THEME_MONO 0
@@ -950,14 +964,14 @@
 *==================*/
 
 /*Enable the examples to be built with the library*/
-#define LV_BUILD_EXAMPLES 1
+#define LV_BUILD_EXAMPLES 0
 
 /*===================
  * DEMO USAGE
  ====================*/
 
 /*Show some widget. It might be required to increase `LV_MEM_SIZE` */
-#define LV_USE_DEMO_WIDGETS 1
+#define LV_USE_DEMO_WIDGETS 0
 
 /*Demonstrate the usage of encoder and keyboard*/
 #define LV_USE_DEMO_KEYPAD_AND_ENCODER 0

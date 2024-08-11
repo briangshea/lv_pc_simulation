@@ -45,7 +45,11 @@
 			"btree.h": "c",
 			"sprinkler.h": "c",
 			"lv_clock.h": "c",
-			"sprinkler_summary.h": "c"
+			"sprinkler_summary.h": "c",
+			"theme.h": "c",
+			"lv_spinbuttons.h": "c",
+			"lv_conf_internal.h": "c",
+			"lv_global.h": "c"
 		},
 	},
 	// tasks.json section

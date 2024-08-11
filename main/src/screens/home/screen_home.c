@@ -103,7 +103,18 @@ void hvac_ctrl_temp_roller_cb(lv_event_t *e) {
     return;
 }
 
-void sprinkler_prog_cb(sprinkler_zone_event_t *e) {
+void sprinkler_summary_cb(lv_event_t *e) {
+   lv_obj_t *obj = lv_event_get_target_obj(e);
+   sprinkler_prog_t *prog = (sprinkler_prog_t *)lv_event_get_user_data(e);
+
+   switch(lv_event_get_code(e)) {
+    case LV_EVENT_CLICKED:
+        screen_sprinkler_display(prog);
+        break;
+   }
+}
+
+void sprinkler_prog_cb(sprinkler_prog_event_t *e) {
     lv_obj_t *obj = (lv_obj_t *)sprinkler_prog_event_get_user_data(e);
     if(!obj) return;
 
@@ -168,13 +179,10 @@ void screen_home_display(void) {
     lv_obj_set_size(spkrl_sum_pnl, LV_SIZE_CONTENT, 400);
     lv_obj_set_flex_flow(spkrl_sum_pnl, LV_FLEX_FLOW_COLUMN);
 
-    time_t now = time(NULL);
-
     for(int i=0; i<MAX_PROGS; i++) {
-        progs[i] = sprinkler_prog_init();
-        sprinkler_prog_set_start(progs[i], now);
         sprkl_summary[i] = sprinkler_summery_create(spkrl_sum_pnl, progs[i]);
         sprinkler_prog_set_cb(progs[i], sprinkler_prog_cb, sprkl_summary[i]);
+        lv_obj_add_event_cb(sprkl_summary[i], sprinkler_summary_cb, LV_EVENT_ALL, progs[i]);
     }
 
     sprinkler_prog_set_description(progs[0], "A really long program description to test scrolling.");

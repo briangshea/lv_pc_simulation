@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <time.h>
 #include "lvgl/lvgl.h"
 
 #include "config.h"
@@ -77,6 +78,12 @@ int main(int argc, char **argv)
   hal_init(800, 480);
 
   init_theme();
+
+  time_t now = time(NULL);
+  for(int i=0; i<MAX_PROGS; i++) {
+    progs[i] = sprinkler_prog_init();
+    sprinkler_prog_set_start(progs[i], &now);
+  }
 
   screen_home_display();
 

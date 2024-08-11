@@ -1,1 +1,1 @@
-#include "assets.c"
+#include "assets.h"

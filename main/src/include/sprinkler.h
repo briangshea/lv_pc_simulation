@@ -28,11 +28,11 @@ void sprinkler_prog_set_cb(sprinkler_prog_t *p, sprinkler_prog_event_cb program_
 
 size_t sprinkler_prog_get_interval(sprinkler_prog_t *p);
 void sprinkler_prog_set_interval(sprinkler_prog_t *p, size_t interval);
-time_t sprinkler_prog_get_start(sprinkler_prog_t *p);
-void sprinkler_prog_set_start(sprinkler_prog_t *p, time_t start);
-time_t sprinkler_prog_get_end(sprinkler_prog_t *p);
-void sprinkler_prog_set_end(sprinkler_prog_t *p, time_t end);
-time_t sprinkler_prog_get_next(sprinkler_prog_t *p);
+time_t* sprinkler_prog_get_start(sprinkler_prog_t *p);
+void sprinkler_prog_set_start(sprinkler_prog_t *p, time_t* start);
+time_t* sprinkler_prog_get_end(sprinkler_prog_t *p);
+void sprinkler_prog_set_end(sprinkler_prog_t *p, time_t* end);
+time_t* sprinkler_prog_get_next(sprinkler_prog_t *p);
 int sprinkler_prog_get_scale(sprinkler_prog_t *p);
 void sprinkler_prog_set_scale(sprinkler_prog_t *p, int scale);
 size_t sprinkler_prog_get_zone_count(sprinkler_prog_t *p);
@@ -64,7 +64,7 @@ sprinkler_prog_t * sprinkler_prog_event_get_prog(sprinkler_prog_event_t *e);
 void * sprinkler_prog_event_get_user_data(sprinkler_prog_event_t *e);
 
 sprinkler_event_type_t sprinkler_zone_event_get_type(sprinkler_zone_event_t *e);
-sprinkler_prog_t * sprinkler_zone_event_get_zone(sprinkler_zone_event_t *e);
+sprinkler_zone_t * sprinkler_zone_event_get_zone(sprinkler_zone_event_t *e);
 void * sprinkler_zone_event_get_user_data(sprinkler_zone_event_t *e);
 
 #endif //sprinkler_H

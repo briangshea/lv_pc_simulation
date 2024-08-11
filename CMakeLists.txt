@@ -16,6 +16,17 @@ set(WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 find_package(SDL2 REQUIRED SDL2)
 
+include(FetchContent)
+
+FetchContent_Declare(
+    ll
+    GIT_REPOSITORY https://github.com/briangshea/c_linkedlist.git
+    GIT_TAG main
+    SOURCE_DIR main/src/ll
+)
+
+FetchContent_MakeAvailable(ll)
+
 add_compile_definitions($<$<BOOL:${LV_USE_DRAW_SDL}>:LV_USE_DRAW_SDL=1>)
 add_compile_definitions($<$<BOOL:${LV_USE_LIBPNG}>:LV_USE_LIBPNG=1>)
 add_compile_definitions($<$<BOOL:${LV_USE_LIBJPEG_TURBO}>:LV_USE_LIBJPEG_TURBO=1>)
@@ -29,7 +40,10 @@ target_include_directories(lvgl
         ${SDL2_INCLUDE_DIRS}
 )
 
-file(GLOB_RECURSE SOURCES main/src/*.c)
+file(GLOB_RECURSE SOURCES main/*.c)
+file(GLOB_RECURSE HEADERS main/*.h)
+
+
 
 add_executable(main ${SOURCES})
 target_include_directories(main PRIVATE main/src/include )
@@ -106,6 +120,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         -Wunreachable-code
         -Wfloat-conversion
         -Wstrict-aliasing
+        -Wno-incompatible-pointer-types
     )
 
     target_compile_options(main PRIVATE -fsanitize=address,leak,undefined)

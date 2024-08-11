@@ -148,15 +148,15 @@ void sprinkler_prog_set_interval(sprinkler_prog_t *p, size_t interval) {
     SEND_PROG_EVENT(SPRINKLER_EVENT_CHANGED);
 }
 
-time_t sprinkler_prog_get_start(sprinkler_prog_t *p) {
+time_t* sprinkler_prog_get_start(sprinkler_prog_t *p) {
     SPKLR_ASSERT_NULL(p);
-    return p->start;
+    return &p->start;
 }
 
-void sprinkler_prog_set_start(sprinkler_prog_t *p, time_t start) {
+void sprinkler_prog_set_start(sprinkler_prog_t *p, time_t *start) {
     struct tm *temp;
     SPKLR_ASSERT_NULL(p);
-    p->start = start;
+    memcpy(&p->start, start,sizeof(p->start));
     temp = localtime(&p->start);
     temp->tm_sec = 0;
     temp->tm_mday+=p->interval;
@@ -164,20 +164,20 @@ void sprinkler_prog_set_start(sprinkler_prog_t *p, time_t start) {
     SEND_PROG_EVENT(SPRINKLER_EVENT_CHANGED);
 }
 
-time_t sprinkler_prog_get_end(sprinkler_prog_t *p) {
+time_t* sprinkler_prog_get_end(sprinkler_prog_t *p) {
     SPKLR_ASSERT_NULL(p);
-    return p->end;
+    return &p->end;
 }
 
-void sprinkler_prog_set_end(sprinkler_prog_t *p, time_t end) {
+void sprinkler_prog_set_end(sprinkler_prog_t *p, time_t *end) {
     SPKLR_ASSERT_NULL(p);
-    p->end = end;
+    memcpy(&p->end, end,sizeof(p->end));
     SEND_PROG_EVENT(SPRINKLER_EVENT_CHANGED);
 }
 
-time_t sprinkler_prog_get_next(sprinkler_prog_t *p) {
+time_t *sprinkler_prog_get_next(sprinkler_prog_t *p) {
     SPKLR_ASSERT_NULL(p);
-    return p->next;
+    return &p->next;
 }
 
 int sprinkler_prog_get_scale(sprinkler_prog_t *p) {
@@ -351,12 +351,13 @@ void * sprinkler_prog_event_get_user_data(sprinkler_prog_event_t *e) {
     return e->user_data;
 }
 
+
 sprinkler_event_type_t sprinkler_zone_event_get_type(sprinkler_zone_event_t *e) {
     SPKLR_ASSERT_NULL(e);
     return e->type;
 }
 
-sprinkler_prog_t * sprinkler_zone_event_get_zone(sprinkler_zone_event_t *e) {
+sprinkler_zone_t * sprinkler_zone_event_get_zone(sprinkler_zone_event_t *e) {
     SPKLR_ASSERT_NULL(e);
     return e->zone;
 }

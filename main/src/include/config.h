@@ -14,4 +14,6 @@
 #include "sprinkler.h"
 #include "sprinkler_summary.h"
 
+#define YEAR_EPOC 1900
+
 #endif

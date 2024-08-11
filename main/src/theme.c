@@ -109,6 +109,17 @@ const lv_style_const_prop_t style_sprinkler_summary_disabled_def[] = {
 };
 LV_STYLE_CONST_INIT(style_sprinkler_summary_disabled, style_sprinkler_summary_disabled_def);
 
+const lv_style_const_prop_t style_hover_def[] = {
+    LV_STYLE_CONST_BORDER_COLOR(LV_COLOR_MAKE(0x22, 0x22, 0xcc)),
+    LV_STYLE_CONST_PROPS_END
+};
+LV_STYLE_CONST_INIT(style_hover, style_hover_def);
+
+const lv_style_const_prop_t style_spinbox_def[] = {
+    LV_STYLE_CONST_TEXT_COLOR(LV_COLOR_MAKE(0x22, 0x22, 0xcc)),
+    LV_STYLE_CONST_PROPS_END
+};
+LV_STYLE_CONST_INIT(style_spinbox, style_spinbox_def);
 
 /**********************
  *      MACROS
@@ -156,7 +167,10 @@ static void new_theme_apply_cb(lv_theme_t * th, lv_obj_t * obj)
         } else if(lv_obj_check_type(obj, &lv_image_class)) {
             // Round corners on images by default
             lv_obj_add_style(obj, &style_image, 0);
-        }
+        } //else if(lv_obj_check_type(obj, &lv_spinbox_class)) {
+            //lv_obj_remove_style_all(obj);
+            //lv_obj_add_style(obj, &style_spinbox);
+        //}
     }
     return;
 }

@@ -18,6 +18,7 @@ LV_STYLE_CONST_EXTERN(style_roller_temp_sel);
 LV_STYLE_CONST_EXTERN(style_roller_temp_main);
 LV_STYLE_CONST_EXTERN(style_sprinkler_summary_enabled);
 LV_STYLE_CONST_EXTERN(style_sprinkler_summary_disabled);
+LV_STYLE_CONST_EXTERN(style_hover);
 
 void init_theme(void);
 

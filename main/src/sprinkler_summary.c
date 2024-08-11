@@ -16,12 +16,6 @@
  *********************/
 #define MY_CLASS &lv_sprinkler_summery_class
 
-#ifdef USE_24H_TIME
-# define DEFAULT_TIME_FMT "%a %b %d %H:%M"
-#else
-# define DEFAULT_TIME_FMT "%a %b %d %l:%M %p"
-#endif
-
 /**********************
  *      TYPEDEFS
  **********************/
@@ -74,22 +68,25 @@ const lv_obj_class_t lv_sprinkler_summery_class = {
 /**********************
  *  STATIC FUNCTIONS
  **********************/
+static void sprinkler_summery_cb(lv_event_t *e) {
+}
+
 static void lv_constructor_cb(const lv_obj_class_t * class_p, lv_obj_t * obj) {
-    LV_LOG_INFO("begin");
     const int width = class_p->width_def;
     const int pad = 5;
     const int imgSize = 64;
 
     _lv_sprinkler_summery_t *c = (_lv_sprinkler_summery_t *)obj;
 
-    lv_obj_set_style_bg_opa(obj, 0x80, 0);
+    lv_obj_set_style_bg_opa(obj, 0x60, 0);
+
+    lv_obj_add_event_cb(obj, sprinkler_summery_cb, LV_EVENT_ALL, NULL);
 
     c->image = lv_image_create(obj);
     lv_obj_set_size(c->image, imgSize, imgSize);
     lv_image_set_src(c->image, ASSET_DEFAULT_PROG_IMAGE);
 
     c->name = lv_label_create(obj);
-    //lv_obj_add_flag(c->name, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
     lv_obj_set_size(c->name, 3*imgSize, LV_SIZE_CONTENT);
     lv_label_set_long_mode(c->name, LV_LABEL_LONG_SCROLL);
     lv_obj_align_to(c->name, c->image, LV_ALIGN_TOP_LEFT, imgSize+pad, 0);
@@ -109,7 +106,6 @@ static void lv_constructor_cb(const lv_obj_class_t * class_p, lv_obj_t * obj) {
 }
 
 static void lv_destructor_cb(const lv_obj_class_t * class_p, lv_obj_t * obj) {
-    LV_LOG_INFO("begin");
     _lv_sprinkler_summery_t *c = (_lv_sprinkler_summery_t*)obj;
     lv_obj_delete(c->image);
     lv_obj_delete(c->next_run_time);
@@ -128,12 +124,12 @@ lv_obj_t *sprinkler_summery_create(lv_obj_t * parent, sprinkler_prog_t *prog) {
     LV_ASSERT_MALLOC(obj);
     lv_obj_class_init_obj((lv_obj_t*)obj);
     obj->prog = prog;
-    sprinkler_summary_refresh(obj);
+    sprinkler_summary_refresh((lv_obj_t*)obj);
     return (lv_obj_t*)obj;
 }
 
 void sprinkler_summary_refresh(lv_obj_t *obj) {
-    time_t startTime;
+    time_t *startTime;
     char strTime[64] = {0};
     _lv_sprinkler_summery_t *_obj = (_lv_sprinkler_summery_t *)obj;
 
@@ -152,8 +148,8 @@ void sprinkler_summary_refresh(lv_obj_t *obj) {
     lv_label_set_text(_obj->desc, sprinkler_prog_get_description(_obj->prog));
 
     startTime = sprinkler_prog_get_next(_obj->prog);
-    if(startTime!=0) {
-        strftime(strTime, 63, _obj->time_fmt, localtime(&startTime));
+    if(startTime && *startTime !=0 ) {
+        strftime(strTime, 63, _obj->time_fmt, localtime(startTime));
         lv_label_set_text_fmt(_obj->next_run_time, "Next Run: %s", strTime);
     } else {
         lv_label_set_text(_obj->next_run_time, "Next Run: N/A");
