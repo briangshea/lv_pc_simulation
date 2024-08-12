@@ -80,9 +80,14 @@ int main(int argc, char **argv)
   init_theme();
 
   time_t now = time(NULL);
+  struct tm * tm_now = localtime(&now);
+  sprinkler_time_t start_time;
+  start_time.hour = tm_now->tm_hour;
+  start_time.min = tm_now->tm_min;
+
   for(int i=0; i<MAX_PROGS; i++) {
     progs[i] = sprinkler_prog_init();
-    sprinkler_prog_set_start(progs[i], &now);
+    sprinkler_prog_set_start(progs[i], &start_time);
   }
 
   screen_home_display();

@@ -50,8 +50,7 @@ struct _sprinkler_prog_s {
     char *name;                     // name of the program
     char *description;              // description of the program
 
-    time_t start;                   // absolute program start date/time
-    time_t end;                     // absolute program end date/time
+    sprinkler_time_t start;         // absolute program start date/time
     time_t next;                    // absolute next program run date/time
     time_t last;                    // absolute last program run date/time
 
@@ -187,30 +186,30 @@ void sprinkler_prog_set_interval(sprinkler_prog_t *p, size_t interval) {
     SEND_PROG_EVENT(SPRINKLER_EVENT_CHANGED);
 }
 
-time_t* sprinkler_prog_get_start(sprinkler_prog_t *p) {
+sprinkler_time_t const * sprinkler_prog_get_start(sprinkler_prog_t *p) {
     SPKLR_ASSERT_NULL(p);
     return &p->start;
 }
 
-void sprinkler_prog_set_start(sprinkler_prog_t *p, time_t *start) {
-    struct tm *temp;
+void sprinkler_prog_set_start(sprinkler_prog_t *p, sprinkler_time_t const * start) {
+    struct tm *tm_next;
+    time_t now = time(NULL);
+
     SPKLR_ASSERT_NULL(p);
     memcpy(&p->start, start,sizeof(p->start));
-    temp = localtime(&p->start);
-    temp->tm_sec = 0;
-    temp->tm_mday+=p->interval;
-    p->next = mktime(temp);
-    SEND_PROG_EVENT(SPRINKLER_EVENT_CHANGED);
-}
 
-time_t* sprinkler_prog_get_end(sprinkler_prog_t *p) {
-    SPKLR_ASSERT_NULL(p);
-    return &p->end;
-}
+    tm_next = localtime(&now);
 
-void sprinkler_prog_set_end(sprinkler_prog_t *p, time_t *end) {
-    SPKLR_ASSERT_NULL(p);
-    memcpy(&p->end, end,sizeof(p->end));
+    if(start->hour<tm_next->tm_hour  ||
+      (start->hour==tm_next->tm_hour && start->min<=tm_next->tm_min) ) {
+        tm_next->tm_yday++;
+        tm_next->tm_mday++;
+    }
+
+    tm_next->tm_hour = start->hour;
+    tm_next->tm_min = start->min;
+
+    p->next = mktime(tm_next);
     SEND_PROG_EVENT(SPRINKLER_EVENT_CHANGED);
 }
 
@@ -248,7 +247,7 @@ char *sprinkler_prog_get_name(sprinkler_prog_t *p) {
     return p->name;
 }
 
-void sprinkler_prog_set_name(sprinkler_prog_t *p, char *name) {
+void sprinkler_prog_set_name(sprinkler_prog_t *p, char const * name) {
     SPKLR_ASSERT_NULL(p);
     p->name = realloc(p->name, strlen(name)+1);
     SPKLR_ASSERT_MALLOC(p->name);
@@ -261,7 +260,7 @@ char *sprinkler_prog_get_description(sprinkler_prog_t *p) {
     return p->description;
 }
 
-void sprinkler_prog_set_description(sprinkler_prog_t *p, char *description) {
+void sprinkler_prog_set_description(sprinkler_prog_t *p, char const * description) {
     SPKLR_ASSERT_NULL(p);
     p->description = realloc(p->description, strlen(description)+1);
     SPKLR_ASSERT_MALLOC(p->description);
